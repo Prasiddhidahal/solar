@@ -44,34 +44,57 @@ class Planet:
         glPopMatrix()
     def update_position(self):
         self.angle += self.speed
+class Meteor:
+    def __init__(self, color, radius, speed):
+        self.color = color
+        self.radius = radius
+        self.speed = speed
+        self.angle = np.random.uniform(0.0, 360.0)
+        self.distance = np.random.uniform(5.0, 40.0)
+
+    def draw(self):
+        glColor3f(self.color[0], self.color[1], self.color[2])
+        glPushMatrix()
+        glRotatef(self.angle, 0.0, 0.0, 1.0)
+        glTranslatef(self.distance, 0.0, 0.0)
+        gluSphere(gluNewQuadric(), self.radius, 32, 32)
+        glPopMatrix()
+
+    def update_position(self):
+        self.angle += self.speed
+
 class SolarSystem:
     def __init__(self):
         self.planets = [
-            Planet("Sun", (1.0, 1.0, 0.0), 1.0, 0.0, 0.0),
-            Planet("Mercury", (0.5, 0.5, 0.5), 0.5, 4.0, 4.0),
-            Planet("Venus", (0.9, 0.6, 0.2), 0.6, 7.0, 3.0),
-            Planet("Earth", (0.0, 0.0, 1.0), 0.7, 10.0, 2.5),
-            Planet("Mars", (1.0, 0.0, 0.0), 0.6, 15.0, 2.0),
-            Planet("Jupiter", (0.9, 0.7, 0.5), 1.3, 20.0, 1.3),
-            Planet("Saturn", (0.9, 0.8, 0.6), 1.2, 25.0, 1.0),
-            Planet("Uranus", (0.0, 0.5, 0.5), 2.4, 28.0, 0.3),
-            Planet("Neptune", (0.4, 0.5, 0.5), 2.1, 32.0, 0.2),
-            Planet("Pluto", (0.5, 0.5, 0.5), 0.4, 36.0, 0.1),
-        ]
-
+    Planet("Sun", (1.0, 1.0, 0.0), 1.0, 0.0, 0.1),
+    Planet("Mercury", (0.6, 0.3, 0.0), 0.5, 4.0, 4.0),  # Brown
+    Planet("Venus", (0.5, 0.2, 0.0), 0.6, 7.0, 3.0),  # Marron
+    Planet("Earth", (0.0, 1.0, 0.0), 0.7, 10.0, 2.5),  # Green
+    Planet("Mars", (1.0, 0.0, 0.0), 0.6, 15.0, 2.0),  # Red
+    Planet("Jupiter", (0.9, 0.7, 0.5), 1.3, 20.0, 1.3),  # Sand
+    Planet("Saturn", (0.9, 0.7, 0.5), 1.2, 25.0, 1.0),  # Sand
+    Planet("Uranus", (0.0, 0.5, 0.5), 2.4, 28.0, 0.3),  # Teal
+    Planet("Neptune", (0.0, 0.0, 1.0), 2.1, 32.0, 0.2),  # Blue
+    Planet("Pluto", (0.5, 0.5, 0.5), 0.4, 36.0, 0.1),  # Grey
+]
+        self.meteors = [Meteor((0.5, 0.5, 0.5), 0.1, np.random.uniform(0.1, 1.0)) for _ in range(100)]
     def update_positions(self):
         for planet in self.planets:
             planet.update_position()
+        for meteor in self.meteors:
+            meteor.update_position()
 
     def draw(self):
         for planet in self.planets:
             planet.draw()
+        for meteor in self.meteors:
+            meteor.draw()
 
 
 def draw_stars():
-    glPointSize(1.5)
+    glPointSize(1)
     glBegin(GL_POINTS)
-    for _ in range(100):
+    for _ in range(1000):  # Increase the number of stars
         glColor3f(np.random.uniform(0.0, 1.0), np.random.uniform(0.0, 1.0), np.random.uniform(0.0, 1.0))
         glVertex3f(np.random.uniform(-30.0, 30.0), np.random.uniform(-30.0, 30.0), np.random.uniform(-30.0, 30.0))
     glEnd()
