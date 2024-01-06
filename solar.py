@@ -14,89 +14,77 @@ class Planet:
         self.speed = speed
         self.angle = 0.0
 
-    # method to draw planets and its axis of rotation
     def draw(self):
-        # Draw 2D orbit path
-        num_segments = 100  # Number of line segments to create a smooth orbit
-        glColor3f(0.5, 0.5, 0.5)  # Set the color for the orbit (gray)
-        glBegin(GL_LINE_LOOP)  # Begin drawing line loop for the orbit
+        num_segments = 100
+        glColor3f(0.5, 0.5, 0.5)
+        glBegin(GL_LINE_LOOP)
         for i in range(num_segments):
-            angle = 2.0 * math.pi * float(i) / num_segments  # Calculate the angle for each segment
-            x = math.cos(angle) * self.distance  # Calculate the x-coordinate of the point on the orbit
-            y = math.sin(angle) * self.distance  # Calculate the y-coordinate of the point on the orbit
-            glVertex3f(x, y, 0.0)  # Specify the vertex position for the point on the orbit
-        glEnd()  # End drawing the orbit
+            theta = 2.0 * math.pi * float(i) / num_segments
+            dx = self.distance * math.cos(theta)
+            dy = self.distance * math.sin(theta)
+            glVertex3f(dx, dy, 0.0)
+        glEnd()
+        glPushMatrix()
+        glColor3f(self.color[0], self.color[1], self.color[2])
+        glRotatef(self.angle, 0.0, 0.0, 1.0)
+        glTranslatef(self.distance, 0.0, 0.0)
+        gluSphere(gluNewQuadric(), self.radius, 32, 32)
 
-        # Draw planet
-        glPushMatrix()  # Push the current matrix onto the stack
-        glColor3f(self.color[0], self.color[1], self.color[2])  # Set the color for the planet
-        glRotatef(self.angle, 0.0, 0.0, 1.0)  # Apply rotation around the z-axis using the current angle
-        glTranslatef(self.distance, 0.0, 0.0)  # Apply translation along the x-axis to position the planet
-        glBegin(GL_TRIANGLE_FAN)  # Begin drawing triangle fan for the planet
-        glVertex3f(0.0, 0.0, 0.0)  # Specify the vertex position for the center of the planet
-        for i in range(num_segments + 1):
-            angle = 2.0 * math.pi * float(i) / num_segments  # Calculate the angle for each segment. evenly distributes the vertices around the circle by dividing the full circle (2π radians) into num_segments equal parts.
-            x = math.sin(angle) * self.radius  # Calculate the x-coordinate of the point on the planet's circumference, , Multiplying it by the radius gives the actual x-coordinate.
-            y = math.cos(angle) * self.radius  # Calculate the y-coordinate of the point on the planet's circumference
-            glVertex3f(x, y, 0.0)  # Specify the vertex position for a point on the planet's circumference
-        glEnd()  # End drawing the planet
-        glPopMatrix()  # Pop the matrix from the stack, restoring the previous matrix state
+        # Draw rings if the planet is Saturn
+        if self.name == "Saturn":
+            glColor3f(0.8, 0.8, 0.6)  # Color of the rings
+            for i in np.linspace(self.radius + 0.1, self.radius + 0.3, 2):  # Two rings
+                glBegin(GL_LINE_LOOP)
+                for theta in np.linspace(0, 2 * np.pi, 100):
+                    x = i * np.cos(theta)
+                    y = i * np.sin(theta)
+                    glVertex3f(x, y, 0.0)
+                glEnd()
 
+        glPopMatrix()
     def update_position(self):
-    # Update the angle of the planet's position based on its speed for each frame or iteration in the simulation.
         self.angle += self.speed
+class SolarSystem:
+    def __init__(self):
+        self.planets = [
+            Planet("Sun", (1.0, 1.0, 0.0), 1.0, 0.0, 0.0),
+            Planet("Mercury", (0.5, 0.5, 0.5), 0.5, 4.0, 4.0),
+            Planet("Venus", (0.9, 0.6, 0.2), 0.6, 7.0, 3.0),
+            Planet("Earth", (0.0, 0.0, 1.0), 0.7, 10.0, 2.5),
+            Planet("Mars", (1.0, 0.0, 0.0), 0.6, 15.0, 2.0),
+            Planet("Jupiter", (0.9, 0.7, 0.5), 1.3, 20.0, 1.3),
+            Planet("Saturn", (0.9, 0.8, 0.6), 1.2, 25.0, 1.0),
+            Planet("Uranus", (0.0, 0.5, 0.5), 2.4, 28.0, 0.3),
+            Planet("Neptune", (0.4, 0.5, 0.5), 2.1, 32.0, 0.2),
+            Planet("Pluto", (0.5, 0.5, 0.5), 0.4, 36.0, 0.1),
+        ]
 
+    def update_positions(self):
+        for planet in self.planets:
+            planet.update_position()
 
-def update_planet_positions(planets):
-    for planet in planets:
-        planet.update_position()
+    def draw(self):
+        for planet in self.planets:
+            planet.draw()
 
 
 def draw_stars():
-    glPointSize(4.0)  # Set a larger size for the stars
-    glBegin(GL_POINTS)  # Start drawing stars
-    num_stars = 100  # Number of stars to draw
+    glPointSize(1.5)
+    glBegin(GL_POINTS)
+    for _ in range(100):
+        glColor3f(np.random.uniform(0.0, 1.0), np.random.uniform(0.0, 1.0), np.random.uniform(0.0, 1.0))
+        glVertex3f(np.random.uniform(-30.0, 30.0), np.random.uniform(-30.0, 30.0), np.random.uniform(-30.0, 30.0))
+    glEnd()
 
-    for _ in range(num_stars):
-        r, g, b = np.random.uniform(0.0, 1.0, size=3)  # Random RGB values for star color
-        glColor3f(r, g, b)  # Set the color for the star
-        # Generate random star positions in the range [-20, 20]
-        x = np.random.uniform(-30.0, 30.0)
-        y = np.random.uniform(-30.0, 30.0)
-        z = np.random.uniform(-30.0, 30.0)
-        glVertex3f(x, y, z)  # Draw a star at the generated position
-
-    glEnd()  # End drawing stars
 
 def main():
-    planets = [
-    Planet("Sun", (1.0, 1.0, 0.0), 2.2, 0.0, 0.0),  # Yellow color for the Sun
-    Planet("Mercury", (0.7, 0.7, 0.7), 0.3, 4.0, 0.9),  # Gray color for Mercury
-    Planet("Venus", (0.8, 0.5, 0.0), 0.6, 8.0, 0.8),  # Orange-like color for Venus
-    Planet("Earth", (0.0, 0.0, 1.0), 0.9, 12.0, 0.7),  # Blue color for Earth
-    Planet("Mars", (1.0, 0.0, 0.0), 0.45, 16.0, 0.6),  # Red color for Mars
-    Planet("Jupiter", (0.9, 0.6, 0.0), 2, 20.0, 0.5),  # Orange color for Jupiter
-    Planet("Saturn", (1,0.5, 0), 2.5, 24.0, 0.4),
-    Planet("Uranus", (0.0, 0.5, 0.5), 2.4, 28.0, 0.3),  # Blue-green color for Uranus
-    Planet("Neptune", (0.4, 0.5, 0.5), 2.1, 32.0, 0.2),
-    Planet("Pluto", (0.5, 0.5, 0.5), 0.4, 36.0, 0.1),
-    
-]
-
     pygame.init()
-    display = (1800, 700)  # width, height of the display window
-    pygame.display.set_caption('The Solar System Simulation')
-    # Set up the Pygame window mode for OpenGL rendering.
+    display = (800, 600)
     pygame.display.set_mode(display, pygame.DOUBLEBUF | pygame.OPENGL)
+    gluPerspective(500, (display[0] / display[1]), 0.1, 50.0)
+    glTranslatef(0.0, 0.0, -5)
 
-    # Set the perspective projection for the 3D scene.
-    # Parameters: field of view angle, aspect ratio, near clipping plane, far clipping plane.
-    gluPerspective(80, (display[0] / display[1]), 0.1, 50.0)
-
-    # Apply a translation to the entire scene to move it along the z-axis.
-    # Parameters: x-axis translation, y-axis translation, z-axis translation.
-    glTranslatef(0.0, 0.0, -20.0)
-
+    solar_system = SolarSystem()
 
     while True:
         for event in pygame.event.get():
@@ -104,28 +92,14 @@ def main():
                 pygame.quit()
                 quit()
 
-        # Clear the color and depth buffers.
+        glRotatef(1, 3, 1, 1)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
-        # Draw the stars
         draw_stars()
-
-        # Update the positions of the planets.
-        update_planet_positions(planets)
-
-        # Draw each planet in the scene.
-        for planet in planets:
-            planet.draw()
-
-        # Flip the display to update the screen.
+        solar_system.update_positions()
+        solar_system.draw()
         pygame.display.flip()
-
-        # Add a small delay to control the frame rate.
-        pygame.time.wait(10)
+        pygame.time.wait(30)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
-#add resolution and make stars 
-
- 
