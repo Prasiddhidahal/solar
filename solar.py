@@ -77,7 +77,7 @@ class SolarSystem:
     Planet("Neptune", (0.0, 0.0, 1.0), 2.1, 32.0, 0.2),  # Blue
     Planet("Pluto", (0.5, 0.5, 0.5), 0.4, 36.0, 0.1),  # Grey
 ]
-        self.meteors = [Meteor((0.5, 0.5, 0.5), 0.1, np.random.uniform(0.1, 1.0)) for _ in range(100)]
+        self.meteors = [Meteor((0.5, 0.5, 0.5), 0.1, np.random.uniform(0.1, 1.0)) for _ in range(50)]
     def update_positions(self):
         for planet in self.planets:
             planet.update_position()
@@ -94,9 +94,9 @@ class SolarSystem:
 def draw_stars():
     glPointSize(1)
     glBegin(GL_POINTS)
-    for _ in range(1000):  # Increase the number of stars
+    for _ in range(500):  # Increase the number of stars
         glColor3f(np.random.uniform(0.0, 1.0), np.random.uniform(0.0, 1.0), np.random.uniform(0.0, 1.0))
-        glVertex3f(np.random.uniform(-30.0, 30.0), np.random.uniform(-30.0, 30.0), np.random.uniform(-30.0, 30.0))
+        glVertex3f(np.random.uniform(-50.0, 50.0), np.random.uniform(-50.0, 50.0), np.random.uniform(-50.0, 50.0))
     glEnd()
 
 
