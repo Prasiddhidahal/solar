@@ -1,2 +1,2 @@
 # Graphics
-Lab 2 of graphics where we use DDA and BLA line algorthim to draw lines useing OpenGL
+This is a mini project where i have done 3d rendering of solar system
