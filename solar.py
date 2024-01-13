@@ -100,8 +100,8 @@ class SolarSystem:
             Planet("Mars", (1.0, 0.0, 0.0), 0.6, 15.0, 2.0),  
             Planet("Jupiter", (0.9, 0.7, 0.5), 1.3, 20.0, 1.3),  
             Planet("Saturn", (0.9, 0.7, 0.5), 1.2, 25.0, 1.0),  
-            Planet("Uranus", (0.0, 0.5, 0.5), 2, 28.0, 0.3),  
-            Planet("Neptune", (0.0, 0.0, 1.0), 2, 34.0, 0.2),  
+            Planet("Uranus", (0.0, 0.5, 0.5), 1.2, 28.0, 0.3),  
+            Planet("Neptune", (0.0, 0.0, 1.0), 1.2, 34.0, 0.2),  
             Planet("Pluto", (0.5, 0.5, 0.5), 0.4, 36.0, 0.1),
         ]
         self.meteors = [Meteor((0.5, 0.5, 0.5), 0.1, np.random.uniform(0.1, 1.5)) for _ in range(100)]
