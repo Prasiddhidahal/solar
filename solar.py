@@ -14,7 +14,7 @@ class Planet:
         self.angle = 0.0
 
     def draw(self):
-        num_segments = 1000 # The higher this number, the more circular the planet will appear
+        num_segments = 1000 
         glColor3f(0.5, 0.5, 0.5)
         glBegin(GL_LINE_LOOP)
         for i in range(num_segments):
@@ -100,9 +100,9 @@ class SolarSystem:
             Planet("Mars", (1.0, 0.0, 0.0), 0.6, 15.0, 2.0),  
             Planet("Jupiter", (0.9, 0.7, 0.5), 1.3, 20.0, 1.3),  
             Planet("Saturn", (0.9, 0.7, 0.5), 1.2, 25.0, 1.0),  
-            Planet("Uranus", (0.0, 0.5, 0.5), 1.2, 28.0, 0.3),  
+            Planet("Uranus", (0.0, 0.5, 0.5), 1.2, 29.0, 0.3),  
             Planet("Neptune", (0.0, 0.0, 1.0), 1.2, 34.0, 0.2),  
-            Planet("Pluto", (0.5, 0.5, 0.5), 0.4, 36.0, 0.1),
+            Planet("Pluto", (0.5, 0.5, 0.5), 0.4, 40.0, 0.1),
         ]
         self.meteors = [Meteor((0.5, 0.5, 0.5), 0.1, np.random.uniform(0.1, 1.5)) for _ in range(100)]
 
@@ -125,7 +125,7 @@ class SolarSystem:
             meteor.draw()
 class Star:
     def __init__(self):
-        self.color = (np.random.uniform(0.0, 1.0), np.random.uniform(0.0, 1.0), np.random.uniform(0.0, 1.0))
+        self.color = (np.random.uniform(1.0, 0.0), np.random.uniform(1.0, 0.0), np.random.uniform(1.0, 0.0))
         self.position = (np.random.uniform(-40.0, 40.0), np.random.uniform(-40.0, 40.0), np.random.uniform(-40.0, 40.0))
 
     def draw(self):
@@ -146,7 +146,7 @@ def main():
     display = (400, 400)
     pygame.display.set_mode(display, pygame.DOUBLEBUF | pygame.OPENGL)
     gluPerspective(500, (display[0] / display[1]), 0.1, 50.0)
-    glTranslatef(0.0, 0.0, -5)
+    glTranslatef(0.0, 0.0, -10)
 
     solar_system = SolarSystem()
 
