@@ -27,7 +27,7 @@ class Planet:
         glColor3f(self.color[0], self.color[1], self.color[2])
         glRotatef(self.angle, 0.0, 0.0, 1.0) #rotates the obj around z axis
         glTranslatef(self.distance, 0.0, 0.0)
-        gluSphere(gluNewQuadric(), self.radius, 32, 32) #draws a sphere
+        gluSphere(gluNewQuadric(), self.radius, 30, 30) #draws a sphere
 
         # Draw rings if the planet is Saturn
         if self.name == "Saturn":
